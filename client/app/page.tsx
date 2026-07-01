@@ -46,7 +46,7 @@ export default function Home() {
   useEffect(() => {
     const checkServer = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/health`, {
+        const res = await fetch(`${API_BASE_URL}/api/health`, {
           cache: "no-store",
         });
 

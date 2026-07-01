@@ -101,6 +101,8 @@ export default function RollDiceButton({ color }: RollDiceButtonProps) {
       return;
     }
 
+    playAnimation(Math.floor(Math.random() * 6) + 1);
+
     socket.emit("roll-die", {
       roomID: roomId,
       color,

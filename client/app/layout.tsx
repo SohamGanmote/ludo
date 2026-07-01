@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     siteName: "Ludo Multiplayer",
     images: [
       {
-        url: "/banner.jpg",
+        url: "/banner.png",
         width: 1200,
         height: 630,
         alt: "Ludo Multiplayer",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ludo Multiplayer",
     description: "Play Ludo online with friends.",
-    images: ["/banner.jpg"],
+    images: ["/banner.png"],
   },
 
   icons: {

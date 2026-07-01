@@ -1,36 +1,172 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ludo Game - Frontend Architecture
 
-## Getting Started
+This project is a multiplayer Ludo game built with **Next.js**, **React**, **TypeScript**, and **WebSockets**. The UI is component-based, making it easy to understand, maintain, and extend.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Board Structure
+
+The game board is built using three reusable components:
+
+## 1. Home Component
+
+The **Home** component renders the player's home area where all four pieces start the game. Each player (Red, Green, Yellow, and Blue) has its own Home component.
+
+**Responsibilities**
+
+- Renders the player's starting area.
+- Displays all pieces that have not entered the board.
+- Shows the colored home triangle leading toward the winner area.
+
+---
+
+## 2. Cell Component
+
+The **Cell** component is responsible for rendering the playable path of the board.
+
+Each cell can display:
+
+- Normal board cells
+- Player pieces
+- Multiple pieces stacked in the same position
+- Colored path cells
+
+This component is reused throughout the entire board, making it the core building block of the game.
+
+---
+
+## 3. Safe Cell Component
+
+The **Safe Cell** component renders protected cells where pieces cannot be captured.
+
+Unlike normal cells:
+
+- Players cannot kill opponent pieces on these cells.
+- Multiple players can safely occupy the same position.
+- These cells are visually different from regular path cells.
+
+---
+
+# Board Layout
+
+The complete board is rendered using **three layers**.
+
+## Layer 1
+
+```
+Home | 6 × 3 Vertical Path | Home
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This renders:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Red Home
+- Vertical path
+- Green Home
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Layer 2
 
-To learn more about Next.js, take a look at the following resources:
+```
+3 × 6 Horizontal Path | Winner Area | 3 × 6 Horizontal Path
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This renders:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Left horizontal path
+- Center winner area
+- Right horizontal path
 
-## Deploy on Vercel
+The winner area is where pieces finish after completing their path.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Layer 3
+
+```
+Home | 6 × 3 Vertical Path | Home
+```
+
+This renders:
+
+- Blue Home
+- Vertical path
+- Yellow Home
+
+---
+
+# Component Hierarchy
+
+```
+Board
+│
+├── Layer 1
+│   ├── Home
+│   ├── Vertical Path (Cell)
+│   └── Home
+│
+├── Layer 2
+│   ├── Horizontal Path (Cell)
+│   ├── Winner Area
+│   └── Horizontal Path (Cell)
+│
+└── Layer 3
+    ├── Home
+    ├── Vertical Path (Cell)
+    └── Home
+```
+
+---
+
+# Socket Architecture
+
+The application uses a single global socket provider to manage the WebSocket connection.
+
+Instead of opening multiple WebSocket connections across different components, the application maintains one persistent connection that every component can use.
+
+## Features
+
+- Single WebSocket connection for the entire application.
+- Automatic reconnection if the connection is lost.
+- Event-based message handling.
+- Centralized event listeners.
+- Room state caching for quick access.
+- Global error handling with user-friendly alerts.
+- Easy event emission from any component.
+
+This architecture keeps networking logic separate from UI components, making the application easier to maintain and preventing duplicate WebSocket connections.
+
+---
+
+# Rendering Flow
+
+```
+Socket Provider
+        │
+        ▼
+Receives Room State
+        │
+        ▼
+Board Component
+        │
+        ▼
+Creates Three Layers
+        │
+        ▼
+Homes + Paths + Winner Area
+        │
+        ▼
+Cells render Pieces
+```
+
+---
+
+# Design Goals
+
+- Reusable components
+- Clean separation of concerns
+- Easy to maintain
+- Scalable architecture
+- Single source of truth for game state
+- Efficient WebSocket communication
+- Responsive board rendering

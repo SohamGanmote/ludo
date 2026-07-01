@@ -31,7 +31,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	// APIs
-	mux.HandleFunc("/health", healthCheck)
+	mux.HandleFunc("/api/health", healthCheck)
 
 	// Sockets: initial request will be in HTTP
 	mux.HandleFunc("/ws", socket.HandleWS)
