@@ -184,7 +184,7 @@ export default function Home() {
           <span>•</span>
 
           <a
-            href="https://github.com/SohamGanmote"
+            href="https://github.com/SohamGanmote/ludo"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition underline"

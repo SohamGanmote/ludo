@@ -20,17 +20,34 @@ func RollDie(conn *websocket.Conn, roomID string, color string) string {
 
 	// roll the die 1 to 6
 	dieNum := rand.Intn(6) + 1
+	movePossible := false
 
-	allPiecesAtHome := true
+	maxIndex := len(moves[color]) - 1
 
 	for _, piece := range player.Pieces {
-		if piece.PositionIndex != -1 {
-			allPiecesAtHome = false
-			break
+		// Skip finished pieces
+		if piece.IsFinished {
+			continue
+		}
+
+		// Piece is at home
+		if piece.PositionIndex == -1 {
+			// if die is 6 then only user can take piece iut of home
+			if dieNum == 6 {
+				movePossible = true
+			}
+			// else skip move
+			continue
+		}
+
+		// Piece is on the board
+		if piece.PositionIndex+dieNum <= maxIndex {
+			movePossible = true
 		}
 	}
 
-	if allPiecesAtHome && dieNum != 6 {
+	// No piece can move so next player's turn
+	if !movePossible {
 		room.CurrentTurn = getNextTurn(room)
 	} else {
 		player.Rolled = true

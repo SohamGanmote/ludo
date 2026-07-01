@@ -152,7 +152,6 @@ func MovePiece(conn *websocket.Conn, roomID string, pieceID int, color string) s
 		player.Pieces[pieceID] = piece
 		player.Rolled = false
 
-		room.CurrentTurn = getNextTurn(room)
 		room.Players[color] = player
 
 		return roomID
