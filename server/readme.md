@@ -291,8 +291,7 @@ Example:
 {
 	"pieces": {
 		"1": {
-			"position": 1,
-			"isHome": false,
+			"positionIndex": 1,
 			"isFinished": false
 		}
 	}
@@ -301,7 +300,7 @@ Example:
 
 Each piece contains three properties.
 
-### position
+### positionIndex
 
 Stores the **index** inside the player's movement path.
 
@@ -312,22 +311,6 @@ Special value:
 ```
 
 means the piece is still inside its home.
-
----
-
-### isHome
-
-```text
-true
-```
-
-The piece is inside its home.
-
-```text
-false
-```
-
-The piece is currently on the board.
 
 ---
 
@@ -401,5 +384,3 @@ If someone clones the project, they only need:
 go mod tidy
 go run .
 ```
-
-That's enough for a minimal README.
